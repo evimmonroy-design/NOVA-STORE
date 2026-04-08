@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Store GT</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
+
+/* HEADER */
+header {
+    background: black;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+/* HERO */
+.hero {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 40px;
+}
+
+/* PRODUCTOS */
+.container {
+    padding: 20px;
+}
+
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.producto {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.producto img {
+    width: 100%;
+}
+
+button {
+    background: black;
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+/* CARRITO */
+#carrito {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: white;
+    width: 250px;
+    height: 100%;
+    padding: 15px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+    overflow-y: auto;
+}
+
+/* FOOTER */
+footer {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>Nova Store GT</h2>
+    <nav>
+        <a href="#">Inicio</a>
+        <a href="#">Productos</a>
+        <a href="#contacto">Contacto</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h1>Tu tienda de confianza 🔥</h1>
+    <p>Accesorios, tecnología y más</p>
+</div>
+
+<div class="container">
+    <h2>Productos</h2>
+    <div class="productos">
+
+        <div class="producto">
+            <img src="https://via.placeholder.com/200">
+            <h3>Reloj Elegante</h3>
+            <p>Q120</p>
+            <button onclick="agregar('Reloj Elegante',120)">Agregar</button>
+        </div>
+
+        <div class="producto">
+            <img src="https://via.placeholder.com/200">
+            <h3>Cadena</h3>
+            <p>Q60</p>
+            <button onclick="agregar('Cadena',60)">Agregar</button>
+        </div>
+
+        <div class="producto">
+            <img src="https://via.placeholder.com/200">
+            <h3>Lentes</h3>
+            <p>Q90</p>
+            <button onclick="agregar('Lentes',90)">Agregar</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- CARRITO -->
+<div id="carrito">
+    <h3>Carrito 🛒</h3>
+    <ul id="lista"></ul>
+    <p>Total: Q<span id="total">0</span></p>
+    <button onclick="comprar()">Finalizar compra</button>
+</div>
+
+<!-- CONTACTO -->
+<div class="container" id="contacto">
+    <h2>Contacto</h2>
+    <p>Pedidos por WhatsApp</p>
+</div>
+
+<footer>
+    <p>Nova Store GT - 2026</p>
+</footer>
+
+<script>
+let carrito = [];
+let total = 0;
+
+function agregar(nombre, precio){
+    carrito.push(nombre);
+    total += precio;
+
+    let lista = document.getElementById("lista");
+    let item = document.createElement("li");
+    item.textContent = nombre + " - Q" + precio;
+    lista.appendChild(item);
+
+    document.getElementById("total").textContent = total;
+}
+
+function comprar(){
+    let numero = "50236427595"; // TU NUMERO
+    let mensaje = "Hola quiero comprar:\n";
+
+    carrito.forEach(p => {
+        mensaje += "- " + p + "\n";
+    });
+
+    mensaje += "Total: Q" + total;
+
+    let url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
+    window.open(url);
+}
+</script>
+
+</body>
+</html>
