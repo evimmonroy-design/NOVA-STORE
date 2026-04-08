@@ -25,16 +25,25 @@ header {
 nav a {
     color: white;
     margin: 0 10px;
-    text-decoration: none;
     cursor: pointer;
 }
 
-header button {
-    background: white;
-    color: black;
-    border: none;
-    padding: 8px;
+/* BOTÓN CARRITO */
+.carrito-btn {
+    position: relative;
+    font-size: 24px;
     cursor: pointer;
+}
+
+#contador {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
 }
 
 /* HERO */
@@ -43,18 +52,6 @@ header button {
     color: white;
     text-align: center;
     padding: 40px;
-}
-
-/* CATEGORÍAS */
-.categorias {
-    text-align: center;
-    margin: 20px;
-}
-
-.categorias button {
-    margin: 5px;
-    padding: 8px 15px;
-    cursor: pointer;
 }
 
 /* PRODUCTOS */
@@ -79,10 +76,9 @@ header button {
     width: 100%;
 }
 
-/* CANTIDAD */
+/* INPUT CANTIDAD */
 .cantidad {
     width: 60px;
-    padding: 5px;
     margin-top: 5px;
 }
 
@@ -92,11 +88,24 @@ header button {
     position: fixed;
     top: 0;
     right: 0;
-    background: white;
-    width: 260px;
+    width: 300px;
     height: 100%;
+    background: white;
     padding: 15px;
-    box-shadow: -2px 0 8px rgba(0,0,0,0.3);
+    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+}
+
+/* BOTÓN SUBIR */
+#subir {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 /* FOOTER */
@@ -112,50 +121,48 @@ footer {
 
 <header>
     <h2>Nova Store GT</h2>
+
     <nav>
         <a onclick="filtrar('todos')">Inicio</a>
         <a onclick="filtrar('accesorios')">Accesorios</a>
         <a onclick="filtrar('tecnologia')">Tecnología</a>
-        <a href="#contacto">Contacto</a>
     </nav>
-    <button onclick="toggleCarrito()">🛒</button>
+
+    <div class="carrito-btn" onclick="toggleCarrito()">
+        🛒
+        <span id="contador">0</span>
+    </div>
 </header>
 
 <div class="hero">
     <h1>Tu tienda de confianza 🔥</h1>
-    <p>Encuentra lo mejor aquí</p>
 </div>
 
 <div class="container">
-    <h2>Productos</h2>
-
     <div class="productos">
 
-        <!-- ACCESORIO -->
         <div class="producto" data-categoria="accesorios">
             <img src="https://via.placeholder.com/200">
-            <h3>Reloj Elegante</h3>
+            <h3>Reloj</h3>
             <p>Q120</p>
-            <input type="number" value="1" min="1" class="cantidad" id="cant1">
-            <button onclick="agregar('Reloj Elegante',120,'cant1')">Agregar</button>
+            <input type="number" value="1" min="1" class="cantidad" id="c1">
+            <button onclick="agregar('Reloj',120,'c1')">Agregar</button>
         </div>
 
-        <!-- ACCESORIO -->
         <div class="producto" data-categoria="accesorios">
             <img src="https://via.placeholder.com/200">
-            <h3>Cadena Acero</h3>
+            <h3>Cadena</h3>
             <p>Q60</p>
-            <input type="number" value="1" min="1" class="cantidad" id="cant2">
-            <button onclick="agregar('Cadena Acero',60,'cant2')">Agregar</button>
+            <input type="number" value="1" min="1" class="cantidad" id="c2">
+            <button onclick="agregar('Cadena',60,'c2')">Agregar</button>
         </div>
 
-        <!-- TECNOLOGÍA -->
         <div class="producto" data-categoria="tecnologia">
             <img src="https://via.placeholder.com/200">
             <h3>Audífonos</h3>
             <p>Q150</p>
-            <input type="number" value="1" min="1" class="cantidad" id="cant3">
-            <button onclick="agregar('Audífonos',150,'cant3')">Agregar</button>
+            <input type="number" value="1" min="1" class="cantidad" id="c3">
+            <button onclick="agregar('Audífonos',150,'c3')">Agregar</button>
         </div>
 
     </div>
@@ -170,13 +177,14 @@ footer {
     <button onclick="comprar()">Comprar</button>
 </div>
 
-<!-- CONTACTO -->
-<footer id="contacto">
-    <h3>Contacto</h3>
-    <p>📱 WhatsApp: 5023642-7595</p>
+<!-- BOTÓN SUBIR -->
+<button id="subir" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<!-- FOOTER -->
+<footer>
+    <p>📱 WhatsApp: 50212345678</p>
     <p>📧 Correo: tunegocio@gmail.com</p>
     <p>📸 Instagram: @tunegocio</p>
-    <p>📘 Facebook: Tu Negocio</p>
 </footer>
 
 <script>
@@ -188,33 +196,45 @@ function toggleCarrito(){
     c.style.display = (c.style.display === "block") ? "none" : "block";
 }
 
-function agregar(nombre, precio, idCantidad){
-    let cantidad = document.getElementById(idCantidad).value;
-
-    for(let i=0; i<cantidad; i++){
-        carrito.push(nombre);
-        total += precio;
-    }
-
+function actualizar(){
     let lista = document.getElementById("lista");
     lista.innerHTML = "";
+    total = 0;
 
-    carrito.forEach(p => {
-        let item = document.createElement("li");
-        item.textContent = p;
-        lista.appendChild(item);
+    carrito.forEach((item, i) => {
+        total += item.precio;
+
+        let li = document.createElement("li");
+        li.innerHTML = `${item.nombre} Q${item.precio} 
+        <button onclick="eliminar(${i})">❌</button>`;
+        lista.appendChild(li);
     });
 
     document.getElementById("total").textContent = total;
+    document.getElementById("contador").textContent = carrito.length;
+}
+
+function agregar(nombre, precio, id){
+    let cantidad = document.getElementById(id).value;
+
+    for(let i=0; i<cantidad; i++){
+        carrito.push({nombre, precio});
+    }
+
+    actualizar();
+}
+
+function eliminar(index){
+    carrito.splice(index,1);
+    actualizar();
 }
 
 function comprar(){
-    let numero = "50236427595";
-
+    let numero = "50212345678";
     let mensaje = "Hola quiero comprar:\n";
 
     carrito.forEach(p => {
-        mensaje += "- " + p + "\n";
+        mensaje += "- " + p.nombre + "\n";
     });
 
     mensaje += "Total: Q" + total;
@@ -223,11 +243,11 @@ function comprar(){
     window.open(url, "_blank");
 }
 
-function filtrar(categoria){
+function filtrar(cat){
     let productos = document.querySelectorAll(".producto");
 
     productos.forEach(p => {
-        if(categoria === "todos" || p.dataset.categoria === categoria){
+        if(cat === "todos" || p.dataset.categoria === cat){
             p.style.display = "block";
         } else {
             p.style.display = "none";
