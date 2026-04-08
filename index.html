@@ -8,14 +8,14 @@
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f4f4;
 }
 
 /* HEADER */
 header {
-    background: black;
-    color: white;
+    background: #000;
+    color: #fff;
     padding: 15px;
     display: flex;
     justify-content: space-between;
@@ -23,15 +23,20 @@ header {
 }
 
 nav a {
-    color: white;
+    color: #fff;
     margin: 0 10px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-/* BOTÓN CARRITO */
+nav a:hover {
+    color: #00ffcc;
+}
+
+/* CARRITO */
 .carrito-btn {
     position: relative;
-    font-size: 24px;
+    font-size: 26px;
     cursor: pointer;
 }
 
@@ -42,16 +47,16 @@ nav a {
     background: red;
     color: white;
     border-radius: 50%;
-    padding: 2px 6px;
+    padding: 3px 7px;
     font-size: 12px;
 }
 
 /* HERO */
 .hero {
-    background: #111;
+    background: linear-gradient(45deg,#000,#222);
     color: white;
     text-align: center;
-    padding: 40px;
+    padding: 50px;
 }
 
 /* PRODUCTOS */
@@ -61,28 +66,55 @@ nav a {
 
 .productos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
 }
 
 .producto {
     background: white;
     padding: 15px;
-    border-radius: 10px;
+    border-radius: 12px;
     text-align: center;
+    transition: 0.3s;
+}
+
+.producto:hover {
+    transform: translateY(-5px);
 }
 
 .producto img {
     width: 100%;
+    border-radius: 10px;
 }
 
-/* INPUT CANTIDAD */
-.cantidad {
-    width: 60px;
-    margin-top: 5px;
+/* CANTIDAD */
+.control-cantidad {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-/* CARRITO */
+.control-cantidad button {
+    padding: 5px 10px;
+}
+
+.control-cantidad span {
+    font-weight: bold;
+}
+
+/* BOTONES */
+button {
+    background: black;
+    color: white;
+    border: none;
+    padding: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* CARRITO PANEL */
 #carrito {
     display: none;
     position: fixed;
@@ -103,9 +135,21 @@ nav a {
     background: black;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 12px;
     border-radius: 50%;
     cursor: pointer;
+}
+
+/* NOTIFICACIÓN */
+#toast {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: green;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
 }
 
 /* FOOTER */
@@ -121,51 +165,54 @@ footer {
 
 <header>
     <h2>Nova Store GT</h2>
-
     <nav>
         <a onclick="filtrar('todos')">Inicio</a>
         <a onclick="filtrar('accesorios')">Accesorios</a>
         <a onclick="filtrar('tecnologia')">Tecnología</a>
     </nav>
-
     <div class="carrito-btn" onclick="toggleCarrito()">
-        🛒
-        <span id="contador">0</span>
+        🛒 <span id="contador">0</span>
     </div>
 </header>
 
 <div class="hero">
-    <h1>Tu tienda de confianza 🔥</h1>
+    <h1>Tu tienda premium 🔥</h1>
 </div>
 
 <div class="container">
-    <div class="productos">
+<div class="productos">
 
-        <div class="producto" data-categoria="accesorios">
-            <img src="https://via.placeholder.com/200">
-            <h3>Reloj</h3>
-            <p>Q120</p>
-            <input type="number" value="1" min="1" class="cantidad" id="c1">
-            <button onclick="agregar('Reloj',120,'c1')">Agregar</button>
-        </div>
+<!-- PRODUCTO -->
+<div class="producto" data-categoria="accesorios">
+    <img src="https://via.placeholder.com/200">
+    <h3>Reloj</h3>
+    <p>Q120</p>
 
-        <div class="producto" data-categoria="accesorios">
-            <img src="https://via.placeholder.com/200">
-            <h3>Cadena</h3>
-            <p>Q60</p>
-            <input type="number" value="1" min="1" class="cantidad" id="c2">
-            <button onclick="agregar('Cadena',60,'c2')">Agregar</button>
-        </div>
-
-        <div class="producto" data-categoria="tecnologia">
-            <img src="https://via.placeholder.com/200">
-            <h3>Audífonos</h3>
-            <p>Q150</p>
-            <input type="number" value="1" min="1" class="cantidad" id="c3">
-            <button onclick="agregar('Audífonos',150,'c3')">Agregar</button>
-        </div>
-
+    <div class="control-cantidad">
+        <button onclick="cambiarCantidad('c1',-1)">➖</button>
+        <span id="c1">0</span>
+        <button onclick="cambiarCantidad('c1',1)">➕</button>
     </div>
+
+    <button onclick="agregar('Reloj',120,'c1')">Agregar</button>
+</div>
+
+<!-- PRODUCTO -->
+<div class="producto" data-categoria="tecnologia">
+    <img src="https://via.placeholder.com/200">
+    <h3>Audífonos</h3>
+    <p>Q150</p>
+
+    <div class="control-cantidad">
+        <button onclick="cambiarCantidad('c2',-1)">➖</button>
+        <span id="c2">0</span>
+        <button onclick="cambiarCantidad('c2',1)">➕</button>
+    </div>
+
+    <button onclick="agregar('Audífonos',150,'c2')">Agregar</button>
+</div>
+
+</div>
 </div>
 
 <!-- CARRITO -->
@@ -177,14 +224,36 @@ footer {
     <button onclick="comprar()">Comprar</button>
 </div>
 
+<!-- TOAST -->
+<div id="toast">Producto agregado ✅</div>
+
 <!-- BOTÓN SUBIR -->
-<button id="subir" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+<button id="subir" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- FOOTER -->
 <footer>
-    <p>📱 WhatsApp: 50212345678</p>
-    <p>📧 Correo: tunegocio@gmail.com</p>
-    <p>📸 Instagram: @tunegocio</p>
+    <h3>Contacto</h3>
+
+    <p>
+        <a href="https://wa.me/50212345678" target="_blank" style="color:white;">
+            <img src="https://cdn-icons-png.flaticon.com/24/733/733585.png">
+            WhatsApp
+        </a>
+    </p>
+
+    <p>
+        <a href="https://instagram.com/tunegocio" target="_blank" style="color:white;">
+            <img src="https://cdn-icons-png.flaticon.com/24/733/733558.png">
+            Instagram
+        </a>
+    </p>
+
+    <p>
+        <a href="mailto:tunegocio@gmail.com" style="color:white;">
+            <img src="https://cdn-icons-png.flaticon.com/24/732/732200.png">
+            Correo
+        </a>
+    </p>
 </footer>
 
 <script>
@@ -196,16 +265,24 @@ function toggleCarrito(){
     c.style.display = (c.style.display === "block") ? "none" : "block";
 }
 
+function cambiarCantidad(id, cambio){
+    let el = document.getElementById(id);
+    let val = parseInt(el.textContent);
+    val += cambio;
+    if(val < 0) val = 0;
+    el.textContent = val;
+}
+
 function actualizar(){
     let lista = document.getElementById("lista");
     lista.innerHTML = "";
     total = 0;
 
-    carrito.forEach((item, i) => {
+    carrito.forEach((item, i)=>{
         total += item.precio;
 
         let li = document.createElement("li");
-        li.innerHTML = `${item.nombre} Q${item.precio} 
+        li.innerHTML = `${item.nombre} Q${item.precio}
         <button onclick="eliminar(${i})">❌</button>`;
         lista.appendChild(li);
     });
@@ -215,42 +292,56 @@ function actualizar(){
 }
 
 function agregar(nombre, precio, id){
-    let cantidad = document.getElementById(id).value;
+    let cantidad = parseInt(document.getElementById(id).textContent);
 
-    for(let i=0; i<cantidad; i++){
+    if(cantidad === 0){
+        alert("Selecciona al menos 1 producto");
+        return;
+    }
+
+    for(let i=0;i<cantidad;i++){
         carrito.push({nombre, precio});
     }
 
+    document.getElementById(id).textContent = 0;
+    actualizar();
+
+    mostrarToast();
+}
+
+function eliminar(i){
+    carrito.splice(i,1);
     actualizar();
 }
 
-function eliminar(index){
-    carrito.splice(index,1);
-    actualizar();
+function mostrarToast(){
+    let t = document.getElementById("toast");
+    t.style.display = "block";
+    setTimeout(()=>{t.style.display="none";},2000);
 }
 
 function comprar(){
     let numero = "50212345678";
     let mensaje = "Hola quiero comprar:\n";
 
-    carrito.forEach(p => {
-        mensaje += "- " + p.nombre + "\n";
+    carrito.forEach(p=>{
+        mensaje += "- "+p.nombre+"\n";
     });
 
-    mensaje += "Total: Q" + total;
+    mensaje += "Total: Q"+total;
 
-    let url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
-    window.open(url, "_blank");
+    let url = "https://wa.me/"+numero+"?text="+encodeURIComponent(mensaje);
+    window.open(url,"_blank");
 }
 
 function filtrar(cat){
     let productos = document.querySelectorAll(".producto");
 
-    productos.forEach(p => {
-        if(cat === "todos" || p.dataset.categoria === cat){
-            p.style.display = "block";
-        } else {
-            p.style.display = "none";
+    productos.forEach(p=>{
+        if(cat==="todos"||p.dataset.categoria===cat){
+            p.style.display="block";
+        }else{
+            p.style.display="none";
         }
     });
 }
