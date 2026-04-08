@@ -26,6 +26,7 @@ nav a {
     color: white;
     margin: 0 10px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 header button {
@@ -34,7 +35,6 @@ header button {
     border: none;
     padding: 8px;
     cursor: pointer;
-    border-radius: 5px;
 }
 
 /* HERO */
@@ -43,6 +43,18 @@ header button {
     color: white;
     text-align: center;
     padding: 40px;
+}
+
+/* CATEGORÍAS */
+.categorias {
+    text-align: center;
+    margin: 20px;
+}
+
+.categorias button {
+    margin: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
 }
 
 /* PRODUCTOS */
@@ -61,23 +73,17 @@ header button {
     padding: 15px;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 .producto img {
     width: 100%;
-    border-radius: 10px;
 }
 
-/* BOTONES */
-button {
-    background: black;
-    color: white;
-    padding: 10px;
-    border: none;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 5px;
+/* CANTIDAD */
+.cantidad {
+    width: 60px;
+    padding: 5px;
+    margin-top: 5px;
 }
 
 /* CARRITO */
@@ -91,16 +97,13 @@ button {
     height: 100%;
     padding: 15px;
     box-shadow: -2px 0 8px rgba(0,0,0,0.3);
-    overflow-y: auto;
-    z-index: 1000;
 }
 
 /* FOOTER */
 footer {
     background: black;
     color: white;
-    text-align: center;
-    padding: 15px;
+    padding: 20px;
 }
 </style>
 </head>
@@ -110,16 +113,17 @@ footer {
 <header>
     <h2>Nova Store GT</h2>
     <nav>
-        <a href="#">Inicio</a>
-        <a href="#">Productos</a>
+        <a onclick="filtrar('todos')">Inicio</a>
+        <a onclick="filtrar('accesorios')">Accesorios</a>
+        <a onclick="filtrar('tecnologia')">Tecnología</a>
         <a href="#contacto">Contacto</a>
     </nav>
-    <button onclick="toggleCarrito()">🛒 Carrito</button>
+    <button onclick="toggleCarrito()">🛒</button>
 </header>
 
 <div class="hero">
     <h1>Tu tienda de confianza 🔥</h1>
-    <p>Accesorios, tecnología y más</p>
+    <p>Encuentra lo mejor aquí</p>
 </div>
 
 <div class="container">
@@ -127,25 +131,31 @@ footer {
 
     <div class="productos">
 
-        <div class="producto">
+        <!-- ACCESORIO -->
+        <div class="producto" data-categoria="accesorios">
             <img src="https://via.placeholder.com/200">
             <h3>Reloj Elegante</h3>
             <p>Q120</p>
-            <button onclick="agregar('Reloj Elegante',120)">Agregar</button>
+            <input type="number" value="1" min="1" class="cantidad" id="cant1">
+            <button onclick="agregar('Reloj Elegante',120,'cant1')">Agregar</button>
         </div>
 
-        <div class="producto">
+        <!-- ACCESORIO -->
+        <div class="producto" data-categoria="accesorios">
             <img src="https://via.placeholder.com/200">
             <h3>Cadena Acero</h3>
             <p>Q60</p>
-            <button onclick="agregar('Cadena Acero',60)">Agregar</button>
+            <input type="number" value="1" min="1" class="cantidad" id="cant2">
+            <button onclick="agregar('Cadena Acero',60,'cant2')">Agregar</button>
         </div>
 
-        <div class="producto">
+        <!-- TECNOLOGÍA -->
+        <div class="producto" data-categoria="tecnologia">
             <img src="https://via.placeholder.com/200">
-            <h3>Lentes de Sol</h3>
-            <p>Q90</p>
-            <button onclick="agregar('Lentes de Sol',90)">Agregar</button>
+            <h3>Audífonos</h3>
+            <p>Q150</p>
+            <input type="number" value="1" min="1" class="cantidad" id="cant3">
+            <button onclick="agregar('Audífonos',150,'cant3')">Agregar</button>
         </div>
 
     </div>
@@ -153,46 +163,53 @@ footer {
 
 <!-- CARRITO -->
 <div id="carrito">
-    <button onclick="toggleCarrito()">❌ Cerrar</button>
-    <h3>Carrito 🛒</h3>
+    <button onclick="toggleCarrito()">❌</button>
+    <h3>Carrito</h3>
     <ul id="lista"></ul>
     <p>Total: Q<span id="total">0</span></p>
-    <button onclick="comprar()">Finalizar compra</button>
+    <button onclick="comprar()">Comprar</button>
 </div>
 
 <!-- CONTACTO -->
-<div class="container" id="contacto">
-    <h2>Contacto</h2>
-    <p>Pedidos por WhatsApp</p>
-</div>
-
-<footer>
-    <p>Nova Store GT - 2026</p>
+<footer id="contacto">
+    <h3>Contacto</h3>
+    <p>📱 WhatsApp: 50212345678</p>
+    <p>📧 Correo: tunegocio@gmail.com</p>
+    <p>📸 Instagram: @tunegocio</p>
+    <p>📘 Facebook: Tu Negocio</p>
 </footer>
 
 <script>
 let carrito = [];
 let total = 0;
 
-function toggleCarrito() {
+function toggleCarrito(){
     let c = document.getElementById("carrito");
     c.style.display = (c.style.display === "block") ? "none" : "block";
 }
 
-function agregar(nombre, precio){
-    carrito.push(nombre);
-    total += precio;
+function agregar(nombre, precio, idCantidad){
+    let cantidad = document.getElementById(idCantidad).value;
+
+    for(let i=0; i<cantidad; i++){
+        carrito.push(nombre);
+        total += precio;
+    }
 
     let lista = document.getElementById("lista");
-    let item = document.createElement("li");
-    item.textContent = nombre + " - Q" + precio;
-    lista.appendChild(item);
+    lista.innerHTML = "";
+
+    carrito.forEach(p => {
+        let item = document.createElement("li");
+        item.textContent = p;
+        lista.appendChild(item);
+    });
 
     document.getElementById("total").textContent = total;
 }
 
 function comprar(){
-    let numero = "50236427595"; // 🔥 CAMBIA POR TU NUMERO REAL
+    let numero = "50212345678";
 
     let mensaje = "Hola quiero comprar:\n";
 
@@ -204,6 +221,18 @@ function comprar(){
 
     let url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
     window.open(url, "_blank");
+}
+
+function filtrar(categoria){
+    let productos = document.querySelectorAll(".producto");
+
+    productos.forEach(p => {
+        if(categoria === "todos" || p.dataset.categoria === categoria){
+            p.style.display = "block";
+        } else {
+            p.style.display = "none";
+        }
+    });
 }
 </script>
 
